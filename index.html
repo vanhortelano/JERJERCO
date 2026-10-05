@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100f18">
+  <title>Sir, unsa man gyud ka?</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background: #100f18;
+      color: #f5eee9;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100svh;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 50% 105%, rgb(112 54 70 / 25%) 0, transparent 48%),
+        radial-gradient(ellipse at 12% 15%, rgb(114 84 132 / 13%) 0, transparent 35%),
+        radial-gradient(ellipse at 90% 82%, rgb(154 105 68 / 10%) 0, transparent 32%),
+        #100f18;
+    }
+
+    body::before {
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 12% 18%, rgb(255 235 208 / 58%) 50%, transparent 100%),
+        radial-gradient(1px 1px at 79% 23%, rgb(255 235 208 / 43%) 50%, transparent 100%),
+        radial-gradient(1px 1px at 31% 77%, rgb(255 235 208 / 35%) 50%, transparent 100%),
+        radial-gradient(1px 1px at 91% 68%, rgb(255 235 208 / 48%) 50%, transparent 100%),
+        radial-gradient(1px 1px at 61% 9%, rgb(255 235 208 / 33%) 50%, transparent 100%);
+      background-size: 280px 240px, 340px 300px, 390px 330px, 310px 270px, 420px 360px;
+      content: "";
+      opacity: .62;
+      pointer-events: none;
+      animation: stars-breathe 8s ease-in-out infinite alternate;
+    }
+
+    button { font: inherit; }
+
+    .page {
+      position: relative;
+      display: grid;
+      min-height: 100svh;
+      place-items: center;
+      padding: 28px 20px;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: absolute;
+      z-index: -1;
+      width: 310px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #8f5361;
+      filter: blur(100px);
+      opacity: .2;
+      animation: float 10s ease-in-out infinite;
+    }
+
+    .glow-one { top: 3%; left: -190px; }
+    .glow-two {
+      right: -190px;
+      bottom: 0;
+      background: #65527e;
+      animation-delay: -5s;
+    }
+
+    .card {
+      position: relative;
+      width: min(100%, 430px);
+      padding: 42px 29px 32px;
+      overflow: hidden;
+      touch-action: pan-y;
+      border: 1px solid rgb(238 211 188 / 14%);
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgb(39 34 45 / 97%), rgb(24 23 32 / 98%));
+      box-shadow: 0 35px 100px rgb(0 0 0 / 45%), 0 0 70px rgb(143 83 97 / 10%);
+      text-align: center;
+      backdrop-filter: blur(20px);
+      animation: card-in .9s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    .card::before {
+      position: absolute;
+      top: 0;
+      right: 18%;
+      left: 18%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgb(238 199 155 / 75%), transparent);
+      content: "";
+      opacity: .7;
+    }
+
+    .card::after {
+      position: absolute;
+      top: -95px;
+      left: 50%;
+      width: 210px;
+      height: 170px;
+      border-radius: 50%;
+      background: rgb(174 116 105 / 11%);
+      content: "";
+      filter: blur(38px);
+      pointer-events: none;
+      transform: translateX(-50%);
+    }
+
+    .sparkle {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 25px;
+      place-items: center;
+      border: 1px solid rgb(240 204 169 / 19%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #51404b, #292630 72%);
+      box-shadow: 0 0 0 8px rgb(236 197 160 / 3%), 0 0 30px rgb(213 162 128 / 12%);
+      font-size: 35px;
+      animation: keepsake-float 5s ease-in-out infinite, candle-glow 4s ease-in-out infinite;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #d5ad86;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 355px;
+      color: #fff5ed;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(29px, 8vw, 39px);
+      font-weight: 500;
+      line-height: 1.22;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+      text-shadow: 0 3px 28px rgb(240 190 153 / 10%);
+    }
+
+    h1.message-title {
+      max-width: 355px;
+      font-size: clamp(24px, 6.6vw, 32px);
+      line-height: 1.38;
+      letter-spacing: -.018em;
+    }
+
+    .caption {
+      min-height: 52px;
+      margin: 18px auto 26px;
+      color: #b8aeb2;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .buttons {
+      display: grid;
+      gap: 12px;
+    }
+
+    .choice {
+      min-height: 54px;
+      padding: 13px 17px;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 800;
+      transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, background .3s ease, border-color .3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .choice:hover { transform: translateY(-3px); }
+    .choice:active { transform: scale(.97); }
+    .choice:focus-visible {
+      outline: 2px solid #e4c29b;
+      outline-offset: 3px;
+    }
+
+    .choice-primary {
+      color: #211a1d;
+      background: linear-gradient(115deg, #e2bf99, #c89683);
+      box-shadow: 0 8px 26px rgb(202 155 120 / 19%), inset 0 1px rgb(255 255 255 / 37%);
+    }
+
+    .choice-primary:hover {
+      box-shadow: 0 12px 34px rgb(202 155 120 / 29%), inset 0 1px rgb(255 255 255 / 44%);
+    }
+
+    .choice-secondary {
+      color: #e0d4cf;
+      border-color: rgb(237 219 206 / 16%);
+      background: rgb(255 255 255 / 4%);
+    }
+
+    .choice-secondary:hover {
+      border-color: rgb(237 219 206 / 30%);
+      background: rgb(255 255 255 / 8%);
+    }
+
+    .footer {
+      margin: 23px 0 0;
+      color: #857c83;
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+
+    .caption.pop { animation: text-arrive .55s cubic-bezier(.16,1,.3,1) both; }
+    .choice.vanish { animation: vanish .45s cubic-bezier(.7,0,.84,0) forwards; pointer-events: none; }
+    .card.page-change { animation: page-out .32s cubic-bezier(.4,0,1,1) both; }
+
+    .card.final-fade { animation: page-out .85s ease forwards; }
+
+    .memory-overlay {
+      position: fixed;
+      z-index: 5;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 110%, rgb(101 66 72 / 25%), transparent 50%),
+        #100f18;
+      opacity: 0;
+      transition: opacity .75s ease;
+    }
+
+    .memory-overlay[hidden] { display: none; }
+    .memory-overlay.active { opacity: 1; }
+
+    .memory-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transform: scale(1.055);
+      filter: saturate(.78) contrast(1.04);
+      transition: opacity .9s ease, transform 3.2s cubic-bezier(.2,.7,.2,1), filter 1s ease;
+    }
+
+    .memory-photo.visible {
+      opacity: 1;
+      transform: scale(1);
+      filter: saturate(.94) contrast(1.02);
+    }
+
+    @keyframes card-in {
+      from { opacity: 0; filter: blur(8px); transform: translateY(24px) scale(.97); }
+      to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+    }
+    @keyframes text-arrive {
+      from { opacity: 0; filter: blur(5px); transform: translateY(10px); }
+      to { opacity: 1; filter: blur(0); transform: translateY(0); }
+    }
+    @keyframes vanish {
+      to { opacity: 0; filter: blur(5px); transform: scale(.88) translateY(8px); max-height: 0; min-height: 0; padding-block: 0; }
+    }
+    @keyframes page-out {
+      to { opacity: 0; filter: blur(8px); transform: translateY(-14px) scale(.98); }
+    }
+    @keyframes keepsake-float {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-5px) rotate(2deg); }
+    }
+    @keyframes candle-glow {
+      0%, 100% { box-shadow: 0 0 0 8px rgb(236 197 160 / 3%), 0 0 28px rgb(213 162 128 / 10%); }
+      50% { box-shadow: 0 0 0 11px rgb(236 197 160 / 4%), 0 0 38px rgb(213 162 128 / 19%); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(26px, -22px); }
+    }
+    @keyframes stars-breathe {
+      from { opacity: .35; transform: translateY(0); }
+      to { opacity: .72; transform: translateY(-5px); }
+    }
+
+    @media (max-width: 380px) {
+      .card { padding: 34px 22px 27px; border-radius: 24px; }
+      .sparkle { width: 70px; height: 70px; margin-bottom: 21px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <span class="glow glow-one" aria-hidden="true"></span>
+    <span class="glow glow-two" aria-hidden="true"></span>
+    <section class="card" id="card" aria-live="polite">
+      <div class="sparkle" id="sparkle" aria-hidden="true">💌</div>
+      <p class="eyebrow" id="eyebrow">A little question for you</p>
+      <h1 id="title">Sir onsa man giyod ka Laki ka or Bayot?</h1>
+      <p class="caption" id="caption">Ayaw kaulaw, sir. Tubag lang gyud ha! 😊</p>
+      <div class="buttons" id="buttons">
+        <button class="choice choice-primary" id="lakiButton" type="button">Laki</button>
+        <button class="choice choice-secondary" id="bayotButton" type="button">Bayot ko</button>
+      </div>
+      <p class="footer" id="footer">Pili lang sa usa 💫</p>
+    </section>
+  </main>
+  <div class="memory-overlay" id="memoryOverlay" aria-hidden="true" hidden>
+    <img class="memory-photo" id="memoryPhoto" alt="">
+  </div>
+  <audio id="backgroundMusic" src="fitterkarma - Kalapastangan (Lyrics) - web.mp3" autoplay loop preload="auto"></audio>
+
+  <script>
+    const card = document.querySelector("#card");
+    const title = document.querySelector("#title");
+    const caption = document.querySelector("#caption");
+    const eyebrow = document.querySelector("#eyebrow");
+    const sparkle = document.querySelector("#sparkle");
+    const footer = document.querySelector("#footer");
+    const lakiButton = document.querySelector("#lakiButton");
+    const bayotButton = document.querySelector("#bayotButton");
+    const buttons = document.querySelector("#buttons");
+    const memoryOverlay = document.querySelector("#memoryOverlay");
+    const memoryPhoto = document.querySelector("#memoryPhoto");
+    const backgroundMusic = document.querySelector("#backgroundMusic");
+
+    const lakiReplies = [
+      "we?",
+      "Buret",
+      "Tug an nagiyod sir kiabaw man giyod kong bading ka hahaha"
+    ];
+    const memoryPhotos = [
+      "0acf8e4d-ca8a-498b-be2d-32ce119ca35b.jpg",
+      "0f46718a-8dad-4ee9-a509-f0da95757dfa.jpg",
+      "2da89c5e-035f-47d3-a42f-72db50a004e8.jpg",
+      "5cfb42d7-51e4-4038-9651-f8f05370ef36.jpg",
+      "8abdd53b-54bf-467e-ac12-ebae7a0efe68.jpg",
+      "8c77dd8d-b195-4707-8d81-1f6a189b7eb2.jpg",
+      "16a70770-7a2f-472c-b4e1-bd9926d4cdf9.jpg",
+      "16f4634a-3085-494a-a580-4144bc2e5f53.jpg",
+      "23ad7a64-aecc-4463-8001-a948bec20315.jpg",
+      "50d2a2ef-c4a7-4f18-92d5-a33d007181f5.jpg",
+      "56c52e25-55d7-46ad-9eaf-3ad5fc7a3e28.jpg",
+      "61b02593-a541-46e5-8ed2-9625dd24584f.jpg",
+      "70d6df41-13d3-4a3f-9314-f2a77d406810.jpg",
+      "86bd0cc6-f0b2-4544-b964-9e19df017b30.jpg",
+      "091e7fab-0edd-4576-aa7a-4eca3e8218e7.jpg",
+      "92f5a271-aaf3-4521-b482-a9ec2c170009.jpg",
+      "608f3cb4-3f43-4725-bccb-251cb52cb57f.jpg",
+      "1550a2e4-f2de-4169-915e-c743349ba23d.jpg",
+      "a08362a8-59bc-4f8b-9650-c61c1769a52c.jpg",
+      "ae7a06ec-c2bd-4357-bfc8-30a7aab621fb.jpg",
+      "af804a27-bece-468a-9cfe-c8968a1b1809 (1).jpg",
+      "af804a27-bece-468a-9cfe-c8968a1b1809.jpg",
+      "b6f08a00-60e7-4123-9080-ce6f3b6b1af9.jpg",
+      "c1ba9cf6-cf64-417d-bf50-e294ae124cb0.jpg",
+      "c0638ce2-f93a-497b-9c7b-136475075b38.jpg",
+      "c5796ca3-9b8a-4800-8b75-7f8b5e95a7e3.jpg",
+      "cee5ad7d-6e8c-49cb-9f72-e94abf04ba21.jpg",
+      "cf6b97d4-86ad-4e9c-afc4-7fbf49af708a.jpg",
+      "d874ae31-0c4e-444c-b21c-d572cb656f22.jpg",
+      "e3f6123a-b95f-4700-84a0-30d18cfe644e.jpg",
+      "f39192a8-1142-464d-b074-93ea523e5a7f.jpg",
+      "fbf4eb6c-a0c2-4b06-9792-81c92dfcd96e.jpg",
+      "ffef8dd7-3765-4db6-9aae-77be60bbc4ba.jpg"
+    ];
+    const slides = [
+      { title: "HAPPY TEACHERS GAY BROTHER", caption: "Please swipe from right to left →", icon: "🎉", eyebrow: "A little message for you" },
+      { title: "Sauna brother jjmon pakayka kataw an pako nimo kay diko kmaoh mo englishhahah atay", icon: "😄" },
+      { title: "tas nag kasuod ta pag grade 10 kay nakita nako imong good side maoh tong geh inbetar tika", icon: "🤝" },
+      { title: "permente tika sunogogon and bweseton hangtud na form atong circle of freinds", icon: "😂" },
+      { title: "Maoh to na time na muramig kahilakon mga mubiyaan me nimo pag grade 10 kay dimi ganahn mga mubiya ka kay mingawon me nimo", icon: "🥹" },
+      { title: "waman giyod ka ni biya ikaw nooy nahabilin saatong home Hahhhaha taas pamog chapter ni sir paul", icon: "🏠" },
+      { title: "bitaw brother daghan kog memories uban mo and kibaw sad kong onsami nimo ka pinangga and salamat kays tanan brother and i hope mag padayon ka mga ing ana kaa.", icon: "💛" },
+      { title: "Gimingaw kanako sa?", icon: "💭", question: true },
+      { title: "asa ato na part sir tong kuanon nako imo nipple hahhahah", icon: "😅" },
+      { title: "bitaw happy birthday brother", icon: "🎂" },
+      { title: "Salamat kaayo brother", icon: "💖", final: true }
+    ];
+    let lakiClicks = 0;
+    let slideIndex = 0;
+    let changingPage = false;
+    let memoryFlashbackStarted = false;
+    let musicStarted = false;
+    let musicStartAttempt;
+    let musicGain;
+    let musicAudioContext;
+
+    function startBackgroundMusic() {
+      if (musicStarted || musicStartAttempt) return musicStartAttempt;
+
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass && !musicAudioContext) {
+        musicAudioContext = new AudioContextClass();
+        const musicSource = musicAudioContext.createMediaElementSource(backgroundMusic);
+        musicGain = musicAudioContext.createGain();
+        musicGain.gain.value = 0.6;
+        musicSource.connect(musicGain);
+        musicGain.connect(musicAudioContext.destination);
+      } else if (!AudioContextClass) {
+        backgroundMusic.volume = 0.6;
+      }
+
+      const audioContextResume = musicAudioContext?.state === "suspended"
+        ? musicAudioContext.resume()
+        : Promise.resolve();
+      musicStartAttempt = Promise.all([audioContextResume, backgroundMusic.play()])
+        .then(() => { musicStarted = true; })
+        .catch((error) => {
+          if (error.name !== "NotAllowedError") {
+            console.error("Unable to play the background music.", error);
+          }
+        })
+        .finally(() => { musicStartAttempt = null; });
+      return musicStartAttempt;
+    }
+
+    function raiseMusicVolume() {
+      if (musicGain) {
+        musicGain.gain.setTargetAtTime(1.2, musicGain.context.currentTime, 0.5);
+      } else {
+        backgroundMusic.volume = 1;
+      }
+    }
+
+    function wait(milliseconds) {
+      return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+    }
+
+    async function startMemoryFlashback() {
+      if (memoryFlashbackStarted) return;
+      memoryFlashbackStarted = true;
+
+      await wait(3000);
+      card.classList.add("final-fade");
+      memoryOverlay.hidden = false;
+      requestAnimationFrame(() => memoryOverlay.classList.add("active"));
+
+      for (let index = 0; index < memoryPhotos.length; index += 1) {
+        const source = memoryPhotos[index];
+        const preload = new Image();
+        preload.src = source;
+
+        try {
+          await preload.decode();
+        } catch (error) {
+          console.error(`Unable to load memory photo: ${source}`, error);
+          continue;
+        }
+
+        memoryPhoto.classList.remove("visible");
+        if (index > 0) await wait(700);
+        memoryPhoto.src = source;
+        memoryPhoto.alt = `Memory ${index + 1} of ${memoryPhotos.length}`;
+        memoryPhoto.classList.add("visible");
+        await wait(3000);
+      }
+
+      memoryOverlay.classList.remove("active");
+      await wait(750);
+      memoryOverlay.hidden = true;
+    }
+
+    function animateCaption() {
+      caption.classList.remove("pop");
+      void caption.offsetWidth;
+      caption.classList.add("pop");
+    }
+
+    function makeButton(text, className, onClick) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = className;
+      button.textContent = text;
+      button.addEventListener("click", onClick);
+      return button;
+    }
+
+    function renderSlide() {
+      const slide = slides[slideIndex];
+      eyebrow.textContent = slide.eyebrow || "For my brother";
+      title.textContent = slide.title;
+      title.classList.toggle("message-title", !slide.eyebrow);
+      caption.textContent = slide.caption || "";
+      sparkle.textContent = slide.icon;
+      footer.textContent = slide.final ? "💛" : slide.question ? "Choose honestly, brother" : "Swipe from right to left →";
+      buttons.replaceChildren();
+
+      if (slide.question) {
+        const yesButton = makeButton("Yess", "choice choice-primary", () => {
+          slideIndex += 1;
+          transitionToSlide();
+        });
+        const noButton = makeButton("No", "choice choice-secondary", () => {
+          title.textContent = "Hay giyog pamuret";
+          noButton.remove();
+          animateCaption();
+        });
+        buttons.append(yesButton, noButton);
+      } else if (!slide.final) {
+        buttons.append(makeButton("Next →", "choice choice-primary", advanceSlide));
+      } else {
+        raiseMusicVolume();
+        startMemoryFlashback();
+      }
+    }
+
+    function transitionToSlide() {
+      if (changingPage) return;
+      changingPage = true;
+      card.classList.add("page-change");
+      window.setTimeout(() => {
+        renderSlide();
+        card.classList.remove("page-change");
+        card.style.animation = "none";
+        void card.offsetWidth;
+        card.style.animation = "";
+        changingPage = false;
+      }, 250);
+    }
+
+    function advanceSlide() {
+      if (changingPage || slides[slideIndex].question || slides[slideIndex].final) return;
+      slideIndex += 1;
+      transitionToSlide();
+    }
+
+    function startStory() {
+      startBackgroundMusic();
+      slideIndex = 0;
+      transitionToSlide();
+    }
+
+    lakiButton.addEventListener("click", () => {
+      startBackgroundMusic();
+      if (lakiClicks < lakiReplies.length) {
+        lakiButton.textContent = lakiReplies[lakiClicks];
+        lakiClicks += 1;
+        if (lakiClicks === lakiReplies.length) {
+          caption.textContent = "Kibaw naman kong bayot a sir dawat raman tiko";
+          animateCaption();
+          lakiButton.classList.add("vanish");
+          lakiButton.addEventListener("animationend", () => lakiButton.remove(), { once: true });
+          footer.textContent = "Usa na lang ka tubag, sir 💫";
+        }
+        return;
+      }
+    });
+
+    bayotButton.addEventListener("click", startStory);
+
+    let touchStartX = 0;
+    card.addEventListener("pointerdown", (event) => {
+      if (event.target.closest("button")) return;
+      touchStartX = event.clientX;
+    });
+    card.addEventListener("pointerup", (event) => {
+      if (!touchStartX || event.target.closest("button")) return;
+      const swipeDistance = event.clientX - touchStartX;
+      touchStartX = 0;
+      if (swipeDistance < -55) advanceSlide();
+    });
+    card.addEventListener("pointercancel", () => { touchStartX = 0; });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") advanceSlide();
+    });
+
+    startBackgroundMusic();
+  </script>
+</body>
+</html>
